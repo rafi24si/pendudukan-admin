@@ -19,7 +19,7 @@ class PeristiwaKelahiranController extends Controller
             ->search($request, $searchable)
             ->filter($request, $filterable)
             ->orderBy('tgl_lahir', 'desc')
-            ->paginate(10)
+            ->paginate(8)
             ->withQueryString();
 
         return view('pages.peristiwa_kelahiran.index', $data);

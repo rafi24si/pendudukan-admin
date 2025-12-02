@@ -19,7 +19,7 @@ class PeristiwaPindahController extends Controller
             ->search($request, $searchable)
             ->filter($request, $filterable)
             ->orderBy('tgl_pindah', 'desc')
-            ->paginate(10)
+            ->paginate(8)
             ->withQueryString();
 
         return view('pages.peristiwa_pindah.index', $data);

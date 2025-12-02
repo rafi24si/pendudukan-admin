@@ -18,7 +18,7 @@ class PeristiwaKematianController extends Controller
         $data['dataKematian'] = PeristiwaKematian::with(['warga', 'media'])
             ->search($request, $searchable)
             ->orderBy('tgl_meninggal', 'desc')
-            ->paginate(12)
+            ->paginate(8)
             ->withQueryString();
 
         return view('pages.peristiwa_kematian.index', $data);
