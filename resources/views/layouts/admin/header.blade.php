@@ -1,7 +1,7 @@
 <div class="app-topstrip bg-dark py-6 px-3 w-100 d-lg-flex align-items-center justify-content-between">
 
     <div class="d-flex align-items-center justify-content-center gap-5 mb-2 mb-lg-0">
-        <a class="d-flex justify-content-center" href="https://www.wrappixel.com/" target="_blank">
+        <a class="d-flex justify-content-center" href="#" target="_blank">
             <span class="fw-bold fs-4 text-white">KEPENDUDUKAN</span>
         </a>
 
@@ -23,27 +23,40 @@
         </div>
     </div>
 
-    {{-- TOMBOL LOGOUT DI POJOK KANAN --}}
+    {{-- LOGIN / USERNAME + LOGOUT --}}
     <div class="d-flex align-items-center gap-3 ms-auto">
-        <a href="{{ route('logout') }}" class="btn btn-danger d-flex align-items-center gap-2 px-4">
-            <i class="ti ti-logout fs-5"></i>
-            Logout
-        </a>
+
+        @if (session()->has('user_name'))
+            {{-- Nama User --}}
+            <span class="text-white fw-semibold d-flex align-items-center gap-2">
+                <i class="ti ti-user-circle fs-5"></i>
+                {{ session('user_name') }}
+            </span>
+
+            {{-- Tombol Logout --}}
+            <a href="{{ route('logout') }}" class="btn btn-danger d-flex align-items-center gap-2 px-4">
+                <i class="ti ti-logout fs-5"></i>
+                Logout
+            </a>
+        @else
+            {{-- Jika Belum Login --}}
+            <a href="{{ route('login.index') }}" class="btn btn-warning d-flex align-items-center gap-2 px-4">
+                <i class="ti ti-login fs-5"></i>
+                Login
+            </a>
+        @endif
+
+
     </div>
 
 </div>
 
 
 <div class="d-lg-flex align-items-center gap-2">
-    {{-- <h3 class="text-white mb-2 mb-lg-0 fs-5 text-center">Check Spike Premium Version</h3> --}}
+
     <div class="d-flex align-items-center justify-content-center gap-2">
+
         <div class="dropdown d-flex">
-            {{-- <a class="btn btn-outline-primary d-flex align-items-center gap-1 " href="javascript:void(0)"
-                    id="drop3" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="ti ti-device-laptop fs-5"></i>
-                    Live Preview
-                    <i class="ti ti-chevron-down fs-5"></i>
-                </a> --}}
             <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop3">
                 <div class="message-body">
                     <a target="_blank"
@@ -75,13 +88,8 @@
                 </div>
             </div>
         </div>
+
         <div class="dropdown d-flex">
-            {{-- <a class="btn btn-primary d-flex align-items-center gap-1 " href="javascript:void(0)" id="drop4"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="ti ti-shopping-cart fs-5"></i>
-                    Buy Now
-                    <i class="ti ti-chevron-down fs-5"></i>
-                </a> --}}
             <div class="dropdown-menu dropdown-menu-end dropdown-menu-animate-up" aria-labelledby="drop4">
                 <div class="message-body">
                     <a target="_blank"
@@ -113,6 +121,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 

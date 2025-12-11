@@ -1,0 +1,20 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+
+class AuthUser
+{
+    public function handle(Request $request, Closure $next)
+    {
+        if (!session()->has('user_id')) {
+            return redirect()
+                ->route('login.index')
+                ->with('error', 'Anda harus login terlebih dahulu.');
+        }
+
+        return $next($request);
+    }
+}

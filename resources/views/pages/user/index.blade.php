@@ -46,6 +46,7 @@
                         <th style="width:60px">No</th>
                         <th>Nama</th>
                         <th>Email</th>
+                        <th>Role</th> {{-- 🆕 DITAMBAHKAN --}}
                         <th>Dibuat</th>
                         <th style="width:170px">Aksi</th>
                     </tr>
@@ -56,7 +57,24 @@
                             <td>{{ ($dataUser->currentPage() - 1) * $dataUser->perPage() + $loop->iteration }}</td>
                             <td>{{ $u->name }}</td>
                             <td>{{ $u->email }}</td>
+
+                            {{-- ROLE BADGE --}}
+                            <td>
+                                @php
+                                    $color = [
+                                        'Super Admin' => 'danger',
+                                        'Admin'       => 'primary',
+                                        'User'        => 'secondary',
+                                    ][$u->role] ?? 'secondary';
+                                @endphp
+
+                                <span class="badge bg-{{ $color }}">
+                                    {{ $u->role ?? 'User' }}
+                                </span>
+                            </td>
+
                             <td>{{ $u->created_at?->format('d M Y H:i') }}</td>
+
                             <td>
                                 <a href="{{ route('user.edit', $u->id) }}" class="btn btn-sm btn-warning">
                                     <i class="fa fa-pen"></i> Edit
@@ -74,7 +92,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="5" class="text-center text-muted py-4">
+                            <td colspan="6" class="text-center text-muted py-4">
                                 Tidak ada data user.
                             </td>
                         </tr>

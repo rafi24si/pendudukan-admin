@@ -36,8 +36,7 @@
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm mb-1">Nama Lengkap</label>
                         <input type="text" name="name" value="{{ old('name') }}"
-                            class="w-full border rounded px-3 py-2 focus:outline-indigo-500"
-                            required>
+                            class="w-full border rounded px-3 py-2 focus:outline-indigo-500" required>
                         @error('name') <small class="text-red-600">{{ $message }}</small> @enderror
                     </div>
 
@@ -45,17 +44,25 @@
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm mb-1">Email</label>
                         <input type="email" name="email" value="{{ old('email') }}"
-                            class="w-full border rounded px-3 py-2 focus:outline-indigo-500"
-                            required>
+                            class="w-full border rounded px-3 py-2 focus:outline-indigo-500" required>
                         @error('email') <small class="text-red-600">{{ $message }}</small> @enderror
+                    </div>
+
+                    {{-- ROLE (NEW) --}}
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm mb-1">Role</label>
+                        <select name="role" class="w-full border rounded px-3 py-2 focus:outline-indigo-500" required>
+                            <option value="">— Pilih Role —</option>
+                            <option value="Admin" {{ old('role') == 'Admin' ? 'selected' : '' }}>Admin</option>
+                        </select>
+                        @error('role') <small class="text-red-600">{{ $message }}</small> @enderror
                     </div>
 
                     {{-- PASSWORD --}}
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm mb-1">Password</label>
                         <input type="password" name="password"
-                            class="w-full border rounded px-3 py-2 focus:outline-indigo-500"
-                            required>
+                            class="w-full border rounded px-3 py-2 focus:outline-indigo-500" required>
                         @error('password') <small class="text-red-600">{{ $message }}</small> @enderror
                     </div>
 
@@ -63,8 +70,7 @@
                     <div class="mb-6">
                         <label class="block text-gray-700 text-sm mb-1">Konfirmasi Password</label>
                         <input type="password" name="password_confirmation"
-                            class="w-full border rounded px-3 py-2 focus:outline-indigo-500"
-                            required>
+                            class="w-full border rounded px-3 py-2 focus:outline-indigo-500" required>
                     </div>
 
                     <button class="w-full bg-indigo-600 text-white font-semibold py-2 rounded hover:bg-indigo-700">

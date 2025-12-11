@@ -11,21 +11,18 @@ use Illuminate\Validation\Rule;
 class AnggotaKeluargaController extends Controller
 {
     /**
-     * Tampilkan daftar anggota keluarga
+     * Tampilkan daftar anggota keluarga (Dikelompokkan berdasarkan KK)
      */
     public function index(Request $request)
     {
-        $filterableColumns = ['kk_id'];
-        $searchableColumns = ['hubungan'];
+        // Ambil semua anggota + relasi KK + Warga
+        $dataAnggota = AnggotaKeluarga::with(['kk.kepalaKeluarga', 'warga'])
+            ->orderBy('kk_id')
+            ->orderBy('hubungan')
+            ->get()
+            ->groupBy('kk_id'); // 👉 PENTING: Group berdasarkan KK
 
-        $data['dataAnggota'] = AnggotaKeluarga::with(['kk', 'warga'])
-            ->filter($request, $filterableColumns)
-            ->search($request, $searchableColumns)
-            ->paginate(8)
-            ->onEachSide(2)
-            ->withQueryString();
-
-        return view('pages.anggota_keluarga.index', $data);
+        return view('pages.anggota_keluarga.index', compact('dataAnggota'));
     }
 
     /**
@@ -33,10 +30,10 @@ class AnggotaKeluargaController extends Controller
      */
     public function create()
     {
-        $data['kkList'] = KeluargaKK::with('kepalaKeluarga')->orderBy('kk_nomor')->get();
-        $data['wargaList'] = Warga::orderBy('nama')->get();
+        $kkList = KeluargaKK::with('kepalaKeluarga')->orderBy('kk_nomor')->get();
+        $wargaList = Warga::orderBy('nama')->get();
 
-        return view('pages.anggota_keluarga.create', $data);
+        return view('pages.anggota_keluarga.create', compact('kkList', 'wargaList'));
     }
 
     /**
@@ -50,14 +47,14 @@ class AnggotaKeluargaController extends Controller
             'hubungan'  => ['required', 'string', 'max:100'],
         ]);
 
-        // Cegah anggota duplikat dalam satu KK
+        // Cegah duplikat anggota di KK yang sama
         $exists = AnggotaKeluarga::where('kk_id', $request->kk_id)
             ->where('warga_id', $request->warga_id)
             ->exists();
 
         if ($exists) {
             return back()->withInput()->withErrors([
-                'warga_id' => 'Warga ini sudah terdaftar sebagai anggota di KK tersebut.',
+                'warga_id' => 'Warga ini sudah terdaftar pada KK tersebut.',
             ]);
         }
 
@@ -76,11 +73,11 @@ class AnggotaKeluargaController extends Controller
      */
     public function edit($id)
     {
-        $data['anggota']   = AnggotaKeluarga::with(['kk', 'warga'])->findOrFail($id);
-        $data['kkList']    = KeluargaKK::with('kepalaKeluarga')->orderBy('kk_nomor')->get();
-        $data['wargaList'] = Warga::orderBy('nama')->get();
+        $anggota   = AnggotaKeluarga::with(['kk', 'warga'])->findOrFail($id);
+        $kkList    = KeluargaKK::with('kepalaKeluarga')->orderBy('kk_nomor')->get();
+        $wargaList = Warga::orderBy('nama')->get();
 
-        return view('pages.anggota_keluarga.edit', $data);
+        return view('pages.anggota_keluarga.edit', compact('anggota', 'kkList', 'wargaList'));
     }
 
     /**
@@ -96,7 +93,7 @@ class AnggotaKeluargaController extends Controller
             'hubungan'  => ['required', 'string', 'max:100'],
         ]);
 
-        // Cegah duplikat (kecuali diri sendiri)
+        // Cek duplikat kecuali dirinya sendiri
         $exists = AnggotaKeluarga::where('kk_id', $request->kk_id)
             ->where('warga_id', $request->warga_id)
             ->where('anggota_id', '!=', $anggota->anggota_id)
@@ -104,7 +101,7 @@ class AnggotaKeluargaController extends Controller
 
         if ($exists) {
             return back()->withInput()->withErrors([
-                'warga_id' => 'Warga ini sudah terdaftar sebagai anggota di KK tersebut.',
+                'warga_id' => 'Warga ini sudah terdaftar pada KK tersebut.',
             ]);
         }
 
