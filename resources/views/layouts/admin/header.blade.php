@@ -2,8 +2,9 @@
 
     <div class="d-flex align-items-center justify-content-center gap-5 mb-2 mb-lg-0">
         <a class="d-flex justify-content-center" href="#" target="_blank">
-            <span class="fw-bold fs-4 text-white">KEPENDUDUKAN</span>
+            <img src="{{ asset('assets/images/logo1.png') }}" alt="Logo Kependudukan" style="height:60px;">
         </a>
+
 
         <div class="d-none d-xl-flex align-items-center gap-3">
             <a href="https://support.wrappixel.com/"

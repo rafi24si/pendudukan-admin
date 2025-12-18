@@ -217,4 +217,77 @@
         </div>
 
     </div>
+
+
+    <div class="container py-5">
+        <div class="row justify-content-center g-4">
+
+            <!-- CARD 1 -->
+            <div class="col-md-4 d-flex justify-content-center">
+                <div class="card shadow-lg text-center p-4" style="width: 22rem; border-radius: 16px;">
+
+                    <h4 class="fw-bold text-primary mb-4">Identitas Pengembang</h4>
+
+                    <!-- FOTO -->
+                    <div class="mx-auto mb-3"
+                        style="
+                        width: 160px;
+                        height: 160px;
+                        border-radius: 50%;
+                        overflow: hidden;
+                        border: 4px solid #0d6efd;
+                    ">
+                        <img src="{{ asset('assets/images/fotosigit.jpeg') }}" alt="Foto Sigit Prasetyo"
+                            style="width:100%; height:100%; object-fit:cover;">
+                    </div>
+
+                    <h5 class="fw-bold mb-1">Sigit Prasetyo</h5>
+                    <p class="mb-1 text-muted">NIM: 245730101131</p>
+                    <p class="mb-3 text-muted">Sistem Informasi</p>
+
+                    <div class="d-flex justify-content-center gap-4 fs-3">
+                        <a href="#" class="text-primary"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-dark"><i class="fab fa-github"></i></a>
+                        <a href="#" class="text-danger"><i class="fab fa-instagram"></i></a>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- CARD 2 -->
+            <div class="col-md-4 d-flex justify-content-center">
+                <div class="card shadow-lg text-center p-4" style="width: 22rem; border-radius: 16px;">
+
+                    <h4 class="fw-bold text-primary mb-4">Identitas Pengembang</h4>
+
+                    <!-- FOTO -->
+                    <div class="mx-auto mb-3"
+                        style="
+                        width: 160px;
+                        height: 160px;
+                        border-radius: 50%;
+                        overflow: hidden;
+                        border: 4px solid #0d6efd;
+                    ">
+                        <img src="{{ asset('assets/images/fotonaura.jpeg') }}" alt="Foto Naura Rahma Fadilah"
+                            style="width:100%; height:100%; object-fit:cover;">
+                    </div>
+
+                    <h5 class="fw-bold mb-1">Naura Rahma Fadilah</h5>
+                    <p class="mb-1 text-muted">NIM: 2457301111</p>
+                    <p class="mb-3 text-muted">Sistem Informasi</p>
+
+                    <div class="d-flex justify-content-center gap-4 fs-3">
+                        <a href="#" class="text-primary"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="text-dark"><i class="fab fa-github"></i></a>
+                        <a href="#" class="text-danger"><i class="fab fa-instagram"></i></a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
 @endsection
