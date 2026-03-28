@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\User;
@@ -26,62 +25,62 @@ class LoginController extends Controller
     }
 
     /**
-     * Proses Login
+     * Proses Login (pakai nama_ic)
      */
     public function login(Request $request)
     {
         $request->validate([
-            'email'    => 'required|email',
+            'nama_ic'  => 'required|string',
             'password' => 'required|min:6',
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        $user = User::where('nama_ic', $request->nama_ic)->first();
 
-        if ($user && Hash::check($request->password, $user->password)) {
-
-            // NORMALISASI ROLE (penting agar middleware tidak error)
-            // Super Admin -> superadmin
-            // Admin       -> admin
-            // User        -> user
-            $normalizedRole = strtolower(str_replace(' ', '', $user->role));
-
-            session([
-                'user_id'    => $user->id,
-                'user_name'  => $user->name,
-                'user_email' => $user->email,
-                'user_role'  => $normalizedRole, // untuk middleware
-            ]);
-
-            return redirect()->route('dashboard')
-                ->with('success', 'Selamat datang kembali!');
+        // cek user
+        if (! $user) {
+            return back()->withErrors([
+                'nama_ic' => 'Nama IC tidak terdaftar.',
+            ])->withInput();
         }
 
-        return back()->withErrors([
-            'password' => 'Email atau password salah.'
-        ])->withInput();
+        // cek password
+        if (! Hash::check($request->password, $user->password)) {
+            return back()->withErrors([
+                'password' => 'Password salah.',
+            ])->withInput();
+        }
+
+        // set session
+        session([
+            'user_id'   => $user->id,
+            'nama_ic'   => $user->nama_ic,
+            'user_role' => $user->role,
+        ]);
+
+        return redirect()->route('dashboard')
+            ->with('success', 'Login berhasil.');
     }
 
     /**
-     * Proses Register
+     * Proses Register (tanpa capslock wajib)
      */
     public function register(Request $request)
     {
         $request->validate([
-            'name'     => 'required|min:3|max:100',
-            'email'    => 'required|email|unique:users,email',
+            'nama_ic'  => 'required|string|unique:users,nama_ic',
+
+            // 🔥 PASSWORD TANPA WAJIB CAPSLOCK
             'password' => [
                 'required',
                 'confirmed',
-                Password::min(6)->letters()->mixedCase()->numbers()
+                Password::min(6)->letters(), // ❌ tidak pakai mixedCase
             ],
-            'role'     => 'required|in:Super Admin,Admin,User',
         ]);
 
         User::create([
-            'name'     => $request->name,
-            'email'    => $request->email,
+            'nama_ic'  => $request->nama_ic,
             'password' => Hash::make($request->password),
-            'role'     => $request->role,
+            'role'     => 'member', // default
         ]);
 
         return redirect()->route('login.index')
@@ -93,9 +92,10 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
-        $request->session()->flush();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
 
         return redirect()->route('login.index')
-            ->with('success', 'Anda sudah logout.');
+            ->with('success', 'Logout berhasil.');
     }
 }

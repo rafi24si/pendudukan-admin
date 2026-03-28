@@ -14,23 +14,18 @@ return Application::configure(basePath: dirname(__DIR__))
 
     ->withMiddleware(function (Middleware $middleware): void {
 
-        // ======================================================
-        // DAFTARKAN CUSTOM MIDDLEWARE DI SINI
-        // ======================================================
-
         $middleware->alias([
-            'auth.user' => \App\Http\Middleware\AuthUser::class,
-            'role'      => \App\Http\Middleware\RoleMiddleware::class,
+            // 🔐 LOGIN CHECK
             'checkLogin' => \App\Http\Middleware\CheckLogin::class,
+
+            // 🔥 ROLE (pakai: role:petinggi)
+            'role'       => \App\Http\Middleware\RoleMiddleware::class,
         ]);
 
-        // ======================================================
-        // END CUSTOM MIDDLEWARE
-        // ======================================================
     })
 
     ->withExceptions(function (Exceptions $exceptions): void {
         //
     })
 
-->create();
+    ->create();

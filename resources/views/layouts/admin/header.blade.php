@@ -2,7 +2,7 @@
 
     <div class="d-flex align-items-center justify-content-center gap-5 mb-2 mb-lg-0">
         <a class="d-flex justify-content-center" href="#" target="_blank">
-            <img src="{{ asset('assets/images/logo1.png') }}" alt="Logo Kependudukan" style="height:60px;">
+            <img src="{{ asset('assets/images/soa.png') }}" alt="Logo Kependudukan" style="height:60px;">
         </a>
 
 
@@ -27,26 +27,42 @@
     {{-- LOGIN / USERNAME + LOGOUT --}}
     <div class="d-flex align-items-center gap-3 ms-auto">
 
-        @if (session()->has('user_name'))
-            {{-- Nama User --}}
-            <span class="text-white fw-semibold d-flex align-items-center gap-2">
-                <i class="ti ti-user-circle fs-5"></i>
-                {{ session('user_name') }}
-            </span>
+        @if (session()->has('nama_ic'))
+            {{-- PROFILE --}}
+            <div class="d-flex align-items-center gap-2 text-white">
 
-            {{-- Tombol Logout --}}
-            <a href="{{ route('logout') }}" class="btn btn-danger d-flex align-items-center gap-2 px-4">
-                <i class="ti ti-logout fs-5"></i>
-                Logout
-            </a>
+                {{-- AVATAR --}}
+                <div class="bg-light text-dark rounded-circle d-flex align-items-center justify-content-center"
+                    style="width:40px;height:40px;font-weight:bold;">
+                    {{ strtoupper(substr(session('nama_ic'), 0, 1)) }}
+                </div>
+
+                {{-- INFO --}}
+                <div class="d-flex flex-column" style="line-height:1;">
+                    <span class="fw-semibold">
+                        {{ session('nama_ic') }}
+                    </span>
+
+                    <small class="text-warning">
+                        {{ session('user_role') === 'petinggi' ? 'Petinggi' : 'Member' }}
+                    </small>
+                </div>
+            </div>
+
+            {{-- LOGOUT --}}
+            <form action="{{ route('logout') }}" method="POST" style="display:inline;">
+                @csrf
+                <button type="submit" class="btn btn-danger">
+                    Logout
+                </button>
+            </form>
         @else
-            {{-- Jika Belum Login --}}
-            <a href="{{ route('login.index') }}" class="btn btn-warning d-flex align-items-center gap-2 px-4">
+            {{-- LOGIN --}}
+            <a href="{{ route('login.index') }}" class="btn btn-secondary d-flex align-items-center gap-2 px-4">
                 <i class="ti ti-login fs-5"></i>
                 Login
             </a>
         @endif
-
 
     </div>
 

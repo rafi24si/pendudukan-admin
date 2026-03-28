@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Notifications\Notifiable;
@@ -10,25 +11,19 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
 
-    // [OPSIONAL] Mendefinisikan nama tabel secara eksplisit
     protected $table = 'users';
 
     /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
+     * Mass assignable
      */
-    // Menggunakan array<int, string> sebagai type hint standar
     protected $fillable = [
-        'name',
-        'email',
+        'nama_ic',
         'password',
+        'role',
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
+     * Hidden fields
      */
     protected $hidden = [
         'password',
@@ -36,17 +31,18 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
+     * Casting
      */
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password'          => 'hashed',
+            'password' => 'hashed',
         ];
     }
+
+    /**
+     * Scope Filter
+     */
     public function scopeFilter(Builder $query, $request, array $filterableColumns): Builder
     {
         foreach ($filterableColumns as $column) {
@@ -57,6 +53,9 @@ class User extends Authenticatable
         return $query;
     }
 
+    /**
+     * Scope Search
+     */
     public function scopeSearch(Builder $query, $request, array $columns): Builder
     {
         if ($request->filled('search')) {
@@ -67,5 +66,18 @@ class User extends Authenticatable
             });
         }
         return $query;
+    }
+
+    /**
+     * Helper Role Check
+     */
+    public function isPetinggi(): bool
+    {
+        return $this->role === 'petinggi';
+    }
+
+    public function isMember(): bool
+    {
+        return $this->role === 'member';
     }
 }

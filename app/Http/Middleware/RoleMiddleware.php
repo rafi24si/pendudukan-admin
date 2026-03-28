@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Middleware;
 
 use Closure;
@@ -9,16 +8,15 @@ class RoleMiddleware
 {
     public function handle(Request $request, Closure $next, ...$roles)
     {
-        if (!session()->has('user_role')) {
-            return redirect()->route('login.index')
-                ->with('error', 'Anda harus login.');
-        }
-
         $userRole = session('user_role');
 
-        if (!in_array($userRole, $roles)) {
-            return redirect()->route('dashboard')
-                ->with('error', 'Anda tidak memiliki akses.');
+        if (! $userRole) {
+            return redirect()->route('login.index')
+                ->with('error', 'Silakan login terlebih dahulu.');
+        }
+
+        if (! in_array($userRole, $roles)) {
+            abort(403, 'Akses ditolak!');
         }
 
         return $next($request);

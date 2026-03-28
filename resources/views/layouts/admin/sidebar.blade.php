@@ -19,14 +19,15 @@
             </a>
         </div>
     @else
-        {{-- ======================== --}}
-        {{-- SIDEBAR ASLI (HANYA LOGIN) --}}
-        {{-- ======================== --}}
+        @php
+            $isPetinggi = session('user_role') === 'petinggi';
+        @endphp
 
         <div>
+            {{-- LOGO --}}
             <div class="brand-logo d-flex align-items-center justify-content-between">
                 <a href="{{ route('dashboard') }}" class="text-nowrap logo-img">
-                    <img src="../assets/images/logos/logo.svg" alt="Logo" />
+                    <img src="{{ asset('assets/images/logos/logo.svg') }}" alt="Logo" />
                 </a>
 
                 <div class="close-btn d-xl-none d-block sidebartoggler cursor-pointer" id="sidebarCollapse">
@@ -34,6 +35,7 @@
                 </div>
             </div>
 
+            {{-- MENU --}}
             <nav class="sidebar-nav scroll-sidebar" data-simplebar="">
                 <ul id="sidebarnav">
 
@@ -45,162 +47,43 @@
 
                     {{-- DASHBOARD --}}
                     <li class="sidebar-item">
-                        <a class="sidebar-link primary-hover-bg" href="{{ route('dashboard') }}" aria-expanded="false">
+                        <a class="sidebar-link primary-hover-bg" href="{{ route('dashboard') }}">
                             <iconify-icon icon="solar:atom-line-duotone"></iconify-icon>
                             <span class="hide-menu">Dashboard</span>
                         </a>
                     </li>
 
-                    {{-- USER --}}
+                    {{-- ABSENSI --}}
                     <li class="sidebar-item">
-                        <a class="sidebar-link primary-hover-bg justify-content-between"
-                            href="{{ route('user.index') }}">
-                            <div class="d-flex align-items-center gap-6">
-                                <span class="d-flex">
-                                    <iconify-icon icon="solar:user-id-line-duotone"></iconify-icon>
-                                </span>
+                        <a class="sidebar-link primary-hover-bg" href="{{ route('absensi.index') }}">
+                            <iconify-icon icon="solar:calendar-line-duotone"></iconify-icon>
+                            <span class="hide-menu">Absensi</span>
+                        </a>
+                    </li>
+
+                    {{-- 🔥 USER (HANYA PETINGGI) --}}
+                    @if ($isPetinggi)
+                        <li class="sidebar-item">
+                            <a class="sidebar-link primary-hover-bg" href="{{ route('user.index') }}">
+                                <iconify-icon icon="solar:user-id-line-duotone"></iconify-icon>
                                 <span class="hide-menu">User</span>
-                            </div>
-                        </a>
-                    </li>
+                            </a>
+                        </li>
+                    @endif
 
-                    {{-- WARGA --}}
-                    <li class="sidebar-item">
-                        <a class="sidebar-link primary-hover-bg justify-content-between"
-                            href="{{ route('warga.index') }}">
-                            <div class="d-flex align-items-center gap-6">
-                                <span class="d-flex">
-                                    <iconify-icon icon="solar:users-group-two-rounded-line-duotone"></iconify-icon>
-                                </span>
-                                <span class="hide-menu">Warga</span>
-                            </div>
-                        </a>
-                    </li>
-
-                    {{-- KELUARGA KK --}}
-                    <li class="sidebar-item">
-                        <a class="sidebar-link primary-hover-bg justify-content-between has-arrow"
-                            href="javascript:void(0)">
-                            <div class="d-flex align-items-center gap-6">
-                                <span class="d-flex">
-                                    <iconify-icon icon="solar:home-angle-line-duotone"></iconify-icon>
-                                </span>
-                                <span class="hide-menu">Keluarga KK</span>
-                            </div>
-                        </a>
-
-                        <ul aria-expanded="false" class="collapse first-level">
-                            <li class="sidebar-item">
-                                <a class="sidebar-link primary-hover-bg justify-content-between"
-                                    href="{{ route('keluarga_kk.index') }}">
-                                    <div class="d-flex align-items-center gap-6">
-                                        <span class="d-flex"><span class="icon-small"></span></span>
-                                        <span class="hide-menu">Data Kepala KK</span>
-                                    </div>
-                                </a>
-                            </li>
-
-                            <li class="sidebar-item">
-                                <a class="sidebar-link primary-hover-bg justify-content-between"
-                                    href="{{ route('anggota_keluarga.index') }}">
-                                    <div class="d-flex align-items-center gap-6">
-                                        <span class="d-flex"><span class="icon-small"></span></span>
-                                        <span class="hide-menu">Anggota Keluarga</span>
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    {{-- KELAHIRAN --}}
-                    <li class="sidebar-item">
-                        <a class="sidebar-link primary-hover-bg justify-content-between has-arrow"
-                            href="javascript:void(0)">
-                            <div class="d-flex align-items-center gap-6">
-                                <span class="d-flex">
-                                    <iconify-icon icon="mdi:baby-face-outline" width="20"
-                                        height="20"></iconify-icon>
-                                </span>
-                                <span class="hide-menu">Kelahiran</span>
-                            </div>
-                        </a>
-
-                        <ul aria-expanded="false" class="collapse first-level">
-                            <li class="sidebar-item">
-                                <a class="sidebar-link primary-hover-bg justify-content-between"
-                                    href="{{ route('peristiwa_kelahiran.index') }}">
-                                    <div class="d-flex align-items-center gap-6">
-                                        <span class="d-flex">
-                                            <iconify-icon icon="mdi:clipboard-text-outline" width="19"
-                                                height="19"></iconify-icon>
-                                        </span>
-                                        <span class="hide-menu">Data Kelahiran</span>
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    {{-- KEMATIAN --}}
-                    <li class="sidebar-item">
-                        <a class="sidebar-link primary-hover-bg justify-content-between has-arrow"
-                            href="javascript:void(0)">
-                            <div class="d-flex align-items-center gap-6">
-                                <span class="d-flex">
-                                    <iconify-icon icon="mdi:skull-outline" width="20" height="20"></iconify-icon>
-                                </span>
-                                <span class="hide-menu">Kematian</span>
-                            </div>
-                        </a>
-
-                        <ul aria-expanded="false" class="collapse first-level">
-                            <li class="sidebar-item">
-                                <a class="sidebar-link primary-hover-bg justify-content-between"
-                                    href="{{ route('peristiwa_kematian.index') }}">
-                                    <div class="d-flex align-items-center gap-6">
-                                        <span class="d-flex">
-                                            <iconify-icon icon="mdi:clipboard-text-clock-outline" width="19"
-                                                height="19"></iconify-icon>
-                                        </span>
-                                        <span class="hide-menu">Data Kematian</span>
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-
-                    {{-- PINDAH --}}
-                    <li class="sidebar-item">
-                        <a class="sidebar-link primary-hover-bg justify-content-between has-arrow"
-                            href="javascript:void(0)">
-                            <div class="d-flex align-items-center gap-6">
-                                <span class="d-flex">
-                                    <iconify-icon icon="mdi:truck-fast-outline" width="20"
-                                        height="20"></iconify-icon>
-                                </span>
-                                <span class="hide-menu">Pindah</span>
-                            </div>
-                        </a>
-
-                        <ul aria-expanded="false" class="collapse first-level">
-                            <li class="sidebar-item">
-                                <a class="sidebar-link primary-hover-bg justify-content-between"
-                                    href="{{ route('peristiwa_pindah.index') }}">
-                                    <div class="d-flex align-items-center gap-6">
-                                        <span class="d-flex">
-                                            <iconify-icon icon="mdi:clipboard-list-outline" width="19"
-                                                height="19"></iconify-icon>
-                                        </span>
-                                        <span class="hide-menu">Data Pindah</span>
-                                    </div>
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
+                    @if (session('user_role') === 'petinggi')
+                        <li class="sidebar-item">
+                            <a class="sidebar-link" href="{{ route('absensi.rekap') }}">
+                                <iconify-icon icon="solar:chart-line-duotone"></iconify-icon>
+                                <span class="hide-menu">Rekap Absensi</span>
+                            </a>
+                        </li>
+                    @endif
 
                 </ul>
             </nav>
         </div>
+
     @endif
 
 </aside>

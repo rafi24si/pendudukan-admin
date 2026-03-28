@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\User;
@@ -14,17 +13,10 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-        $searchableColumns = ['name', 'email'];
-
-        $dataUser = User::when($request->search, function ($q) use ($request, $searchableColumns) {
-                $q->where(function ($query) use ($request, $searchableColumns) {
-                    foreach ($searchableColumns as $col) {
-                        $query->orWhere($col, 'like', '%' . $request->search . '%');
-                    }
-                });
-            })
+        $dataUser = User::when($request->search, function ($q) use ($request) {
+            $q->where('nama_ic', 'like', '%' . $request->search . '%');
+        })
             ->paginate(10)
-            ->onEachSide(2)
             ->withQueryString();
 
         return view('pages.user.index', compact('dataUser'));
@@ -39,28 +31,21 @@ class UserController extends Controller
     }
 
     /**
-     * SIMPAN USER BARU
+     * SIMPAN USER
      */
     public function store(Request $request)
     {
         $request->validate([
-            'name'     => 'required|min:3',
-            'email'    => 'required|email|unique:users,email',
-            'role'     => 'required|in:Super Admin,Admin,User',
+            'nama_ic'  => 'required|string|max:100|unique:users,nama_ic',
             'password' => 'required|min:6|confirmed',
+            'role'     => 'required|in:petinggi,member',
         ]);
 
         try {
-
-            // NORMALISASI ROLE ke sistem login
-            $normalizedRole = strtolower(str_replace(' ', '', $request->role));
-            // Super Admin → superadmin, Admin → admin, User → user
-
             User::create([
-                'name'     => $request->name,
-                'email'    => $request->email,
-                'role'     => $normalizedRole,
+                'nama_ic'  => trim($request->nama_ic),
                 'password' => Hash::make($request->password),
+                'role'     => $request->role,
             ]);
 
             return redirect()->route('user.index')
@@ -68,7 +53,9 @@ class UserController extends Controller
 
         } catch (\Exception $e) {
             Log::error('Gagal membuat user: ' . $e->getMessage());
-            return back()->withInput()->with('error', 'Error: ' . $e->getMessage());
+
+            return back()->withInput()
+                ->with('error', 'Terjadi kesalahan saat menyimpan user.');
         }
     }
 
@@ -87,25 +74,20 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name'     => 'required|min:3',
-            'email'    => 'required|email|unique:users,email,' . $id,
-            'role'     => 'required|in:Super Admin,Admin,User',
+            'nama_ic'  => 'required|unique:users,nama_ic,' . $id,
             'password' => 'nullable|min:6|confirmed',
+            'role'     => 'required|in:petinggi,member',
         ]);
 
         $user = User::findOrFail($id);
 
         try {
-
-            // NORMALISASI ROLE
-            $normalizedRole = strtolower(str_replace(' ', '', $request->role));
-
             $data = [
-                'name'  => $request->name,
-                'email' => $request->email,
-                'role'  => $normalizedRole,
+                'nama_ic' => $request->nama_ic,
+                'role'    => $request->role,
             ];
 
+            // update password jika diisi
             if ($request->filled('password')) {
                 $data['password'] = Hash::make($request->password);
             }
@@ -117,7 +99,10 @@ class UserController extends Controller
 
         } catch (\Exception $e) {
             Log::error("Gagal update user ID {$id}: " . $e->getMessage());
-            return back()->withInput()->with('error', 'Error: ' . $e->getMessage());
+
+            return back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan saat update.');
         }
     }
 
@@ -134,8 +119,9 @@ class UserController extends Controller
 
         } catch (\Exception $e) {
             Log::error("Gagal hapus user ID {$id}: " . $e->getMessage());
+
             return redirect()->route('user.index')
-                ->with('error', 'Error: ' . $e->getMessage());
+                ->with('error', 'Terjadi kesalahan saat menghapus.');
         }
     }
 }

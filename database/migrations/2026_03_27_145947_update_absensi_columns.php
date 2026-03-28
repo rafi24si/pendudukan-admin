@@ -9,11 +9,11 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->enum('role', ['petinggi', 'member'])
-                  ->default('member');
+        Schema::table('absensis', function (Blueprint $table) {
+            $table->renameColumn('jam_masuk', 'masuk_kota');
+            $table->renameColumn('jam_pulang', 'keluar_kota');
         });
     }
 
@@ -22,8 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('role');
-        });
+        //
     }
 };

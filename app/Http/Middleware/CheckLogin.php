@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Middleware;
 
 use Closure;
@@ -9,9 +8,14 @@ class CheckLogin
 {
     public function handle(Request $request, Closure $next)
     {
-        if (!session()->has('user_id')) {
+        // cek session login utama
+        if (! session()->has('user_id') || ! session()->has('nama_ic')) {
+
+            // hapus session kotor (jaga-jaga)
+            session()->flush();
+
             return redirect()->route('login.index')
-                ->with('error', 'Anda harus login terlebih dahulu.');
+                ->with('error', 'Silakan login terlebih dahulu.');
         }
 
         return $next($request);
